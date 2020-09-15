@@ -22,6 +22,10 @@ The content assumes you have basic knowledge on using QGIS and working with spat
 Trying to replicate the look and feel of old maps with modern tools is more difficult than one would imagine. 
 ![An example of classic cartography. Source: https://timomeriluoto.kapsi.fi/Sivut/Paasivu/KARTAT/Teemakartat/Teemakartat.html](https://github.com/GispoCoding/QGIS-visualization-workshop/blob/master/images/old_map_example.PNG?raw=true)
 
+So a bit of *noise* in your maps can make them look very different and more personal, 
+
+Choosing the right colors is a key factor in making stunning cartography. An excellent resource to help you with that is [this blog post](https://blog.datawrapper.de/beautifulcolors/) by Datawrapper. 
+
 ## Importing visualization resources
 Most of the resources QGIS uses for visualization is XML-based or text based. This means that exporting and importing data is relatively easy. 
 
