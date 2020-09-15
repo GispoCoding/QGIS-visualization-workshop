@@ -31,13 +31,17 @@ Most of the resources QGIS uses for visualization is XML-based or text based. Th
 
 I have shared some of my QGIS resources to a [separate repository. ](https://github.com/tjukanovt/qgis_styles)
 
+![You can import style files directly from an URL to your Style Manager.](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/import_style.PNG)
 
 
 ## Introduction to QGIS expressions
 Expressions in QGIS are "SQL'ish" way to select, filter and process data. 
 
+![Expression dialog can be found from QGIS in several places](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/expression_dialog.PNG)
+
 The **Function List** inside expressions contains functions as well as fields and values loaded from your data. In the **Expression** window you see the calculation expressions you create with the **Function List**. For the most commonly used operators, see **Operators**.
 
+An example of a bit longer expression with few QGIS extra flavors can be seen in the Qlimt style and the geometry generator expression. 
 ```
 with_variable('my_geom',
 CASE WHEN 
