@@ -3,31 +3,38 @@
 
 Author: Topi Tjukanov
 
+Parts of this blog post are based on [my blog post](https://www.gispo.fi/en/open-software/geogiffery-in-2020-with-qgis-temporal-controller/) about the QGIS Temporal Controller and 
+
 ## Goals
 
 After this workshop participants should be able to:
 - Import shared visualization resources (e.g. palettes, styles) to QGIS
 - Have a good understanding of how expressions work in QGIS and how they can be used in data-driven visualizations
-- How to make animated maps with QGIS either with Temporal Controller or PyQGIS
+- How to make animated maps using QGIS either with Temporal Controller or PyQGIS
 
 ## Prerequisites
 Workshop is designed to work with QGIS 3.14.15 or newer. You can download latest QGIS version [here](https://qgis.org/en/site/forusers/download.html). 
 
-The content assumes you have basic knowledge on using QGIS and working with spatial data. 
+Basic knowledge on using QGIS and working with spatial data helps. 
 
-# Workshop exercises
-## Basic cartography trick & tips in QGIS
-
+# Workshop examples
+## Introduction to cartography trick & tips in QGIS
+What makes a beautiful map and an informative visualization? The answer is not straightforward and especially trying to cover both aspects on a single map can be very difficult. 
 
 Trying to replicate the look and feel of old maps with modern tools is more difficult than one would imagine. 
 ![An example of classic cartography. Source: https://timomeriluoto.kapsi.fi/Sivut/Paasivu/KARTAT/Teemakartat/Teemakartat.html](https://github.com/GispoCoding/QGIS-visualization-workshop/blob/master/images/old_map_example.PNG?raw=true)
 
 So a bit of *noise* in your maps can make them look very different and more personal, 
 
-Choosing the right colors is a key factor in making stunning cartography. An excellent resource to help you with that is [this blog post](https://blog.datawrapper.de/beautifulcolors/) by Datawrapper. 
+Few general tips for visualizing 
+1.  Don’t add unnecessary elements on your map. Even ditch (or at least simplify) the background map if you can. Don’t forget that you can change your project background color and black is  **always**  cool.
+2.  Experiment with colors and blending modes. Just like with any static map, these really give that extra touch to your outputs.Choosing the right colors is a key factor in making stunning cartography. An excellent resource to help you with that is [this blog post](https://blog.datawrapper.de/beautifulcolors/) by Datawrapper. 
+3.  Use expressions and dynamic styling. We will cover those later. 
 
 ## Importing visualization resources
 Most of the resources QGIS uses for visualization is XML-based or text based. This means that exporting and importing data is relatively easy. 
+
+Add layer from the data folder to your QGIS project. 
 
 I have shared some of my QGIS resources to a [separate repository. ](https://github.com/tjukanovt/qgis_styles)
 
@@ -88,6 +95,10 @@ Note when writing expressions that fields name should be double-quoted. Values o
 Try adding the **finland_municipalities.geojson** file from the data folder to your project and create a geometry generator style for it and paste the expression above to the layer. Try editing the style and see how the shapes change. 
 
 ## QGIS Temporal Controller
+You need to acquire a vector dataset with some information about time and preferably in a valid way. 
+||| ADD DATA HERE |||
+
+In QGIS the basic valid datetime format is  _YYYY-MM-DD hh:mm:ss,_ but the Temporal Controller can work also only with date information (e.g. .  _YYYY-MM-DD)._ Read more about different types to represent date and time from my  [old blog post](https://medium.com/@tjukanov/geogiffery-in-a-nutshell-introduction-to-qgis-time-manager-31bb79f2af19).
 
 Temporal Controller configuration offers you the following options:
 
@@ -98,8 +109,8 @@ Temporal Controller configuration offers you the following options:
 -   Start and End Date/Time from Expressions. If your data does not have a valid datetime column you can use this option to make one form existing fields. For instance if you are using the region_buildings dataset in your animation provided to you earlier, you could build a valid timestamp using the expression to_date(“YYYYMMDD”) as the starting date and for example to_date(‘2020-01-01’) as the end date to make the buildings appear cumulatively.
 - Redraw Layer Only. Like the first option, but layer gets redrawn on every frame. The first option and this are probably the biggest changes compared to Time Manager. This basically allows you to redraw layers even without a temporal attribute. You can for example use random values here that change on every frame or parse out seconds from. You can get some crazy ideas by applying the ideas from [this presentation by Nyall Dawson.](http://www.youtube.com/watch?v=v8li0VdrDBI)
 
-## Creating a DASHBOARD with QGIS
-Dashboards seem to be a thing. So let's build one using QGIS.
+## Creating a dashboard with QGIS
+Dashboards seem to be a thing currently in data visualization. So let's try to build one using QGIS.
 
 First thing a dashboard needs is data that is updating on regular basis. In this example we will use ship locations form the [Digitraffic API](https://www.digitraffic.fi/en/marine-traffic/#/restjson--api). 
 
@@ -108,17 +119,11 @@ https://meri.digitraffic.fi/api/v1/locations/latest
 
 ![You can insert a GeoJSON directy from an URL](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/insert_geojson.PNG)
 
-This should load a GeoJSON layer to your project in a few seconds. In the data you can see the following attributes:
-- mmsi
-- sog
-- cog
-- navStat
-- rot
-- posAcc
-- raim
-- heading
-- timestamp
-- timestampExternal
+This should load a GeoJSON layer to your project in a few seconds. In the data we are interested in the following attributes:
+- mmsi: ship identification number
+- sog: speed over ground
+- cog: course over ground
+- timestampExternal: an epoxh timestamp
 
 The API also returns some really old features, so you can first filter those out from the screen by adding a filter to the layer with a nice round epoch:
 
@@ -132,7 +137,9 @@ To rotate the symbols we can use another attribute from the data. Open the marke
 
      "cog" 
 
-To make the data update automatically, we can use PyQGIS to reload the source on regular intervals. See this example.
+![Use your visualization skills to create an informative dashboard](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/dashboard_sample.PNG)
+
+As a last step, to make the data update automatically, we can use PyQGIS to reload the source on regular intervals. See the example below ([Big thanks to Keith Jenkins!](https://twitter.com/kgjenkins/status/1308495702843154440?s=20)):
 
     import threading
     import datetime
