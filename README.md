@@ -95,24 +95,34 @@ Note when writing expressions that fields name should be double-quoted. Values o
 Try adding the **finland_municipalities.geojson** file from the data folder to your project and create a geometry generator style for it and paste the expression above to the layer. Try editing the style and see how the shapes change. 
 
 ## QGIS Temporal Controller
-You need to acquire a vector dataset with some information about time and preferably in a valid way. 
-||| ADD DATA HERE |||
+From the version 3.14 onwards QGIS has had a functionality to visualize temporal data better called Temporal Controller. 
 
-In QGIS the basic valid datetime format is  _YYYY-MM-DD hh:mm:ss,_ but the Temporal Controller can work also only with date information (e.g. .  _YYYY-MM-DD)._ Read more about different types to represent date and time from my  [old blog post](https://medium.com/@tjukanov/geogiffery-in-a-nutshell-introduction-to-qgis-time-manager-31bb79f2af19).
+You need to acquire a vector dataset with some information about time and preferably in a valid way. In QGIS the basic valid datetime format is  _YYYY-MM-DD hh:mm:ss,_ but the Temporal Controller can work also only with date information (e.g. .  _YYYY-MM-DD)._ Read more about different types to represent date and time from my  [old blog post](https://medium.com/@tjukanov/geogiffery-in-a-nutshell-introduction-to-qgis-time-manager-31bb79f2af19).
+
+The data folder contains a shapefile with all the buildings in the Helsinki region called region_buildings.shp. 
 
 Temporal Controller configuration offers you the following options:
 
 -   Fixed time range. Here you can manually select when ALL the features of the layer will be drawn on the map. This option doesn’t require the data to have any date or time fields. Could be helpful e.g. with a background layer in your animation.
 -   Single field with Date/Time. This option only requires one attribute and set the event duration manually for all features. See more below.
--   Separate Fields for Start and End Date/Time. Your data should have two attributes with start and end times. Individual features that interact with the maps temporal extent will be rendered. An example of this type of data could be building vectors which would have building date and demolition date.
--   Separate Fields for Start and Event Duration. Like the ones above, this also works on individual features, but event duration should be read from the data. As an example if you are working with the meteorite data, you could build event durations based on the magnitude of the meteorite to build a nice visual effect. So bigger meteorites stay on the map for a longer time.
--   Start and End Date/Time from Expressions. If your data does not have a valid datetime column you can use this option to make one form existing fields. For instance if you are using the region_buildings dataset in your animation provided to you earlier, you could build a valid timestamp using the expression to_date(“YYYYMMDD”) as the starting date and for example to_date(‘2020-01-01’) as the end date to make the buildings appear cumulatively.
-- Redraw Layer Only. Like the first option, but layer gets redrawn on every frame. The first option and this are probably the biggest changes compared to Time Manager. This basically allows you to redraw layers even without a temporal attribute. You can for example use random values here that change on every frame or parse out seconds from. You can get some crazy ideas by applying the ideas from [this presentation by Nyall Dawson.](http://www.youtube.com/watch?v=v8li0VdrDBI)
+-   Separate Fields for Start and End Date/Time. Your data should have two attributes with start and end times. Individual features that interact with the maps temporal extent will be rendered. 
+-   Separate Fields for Start and Event Duration. Like the ones above, this also works on individual features, but event duration should be read from the data. 
+-   Start and End Date/Time from Expressions. If your data does not have a valid datetime column you can use this option to make one form existing fields. 
+- Redraw Layer Only. Like the first option, but layer gets redrawn on every frame. The first option and this are probably the biggest changes compared to the Time Manager plugin. This basically allows you to redraw layers even without a temporal attribute. You can for example use random values here that change on every frame or parse out seconds from. You can get some crazy ideas by applying the ideas from [this presentation by Nyall Dawson.](http://www.youtube.com/watch?v=v8li0VdrDBI)
+
+
+![Adding temporal data to your project and turning on the tempral capabilities](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/add_temporal_data.PNG)
+
+After this you need to activate the Temroral Controller panel in your project (the clock icon) and turn on the animated view (the freen button). The animated view allows you to browse back and forth with the building data and see how the region has developed. 
+
+![Helsinki city center in 1912 with the temporal view](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/temporal_view.PNG)
+
+If there was also a dataset with demolished buildings this could be even more informative and interesting. This could be exported in to an animated gif or a video. If you want to add some basemaps to your QGIS, check out [this script.](https://raw.githubusercontent.com/klakar/QGIS_resources/master/collections/Geosupportsystem/python/qgis_basemaps.py) 
+
+*Try to visualize the buildings in an informative way. What kind of information is important when building this type of animaton?*
 
 ## Creating a dashboard with QGIS
-Dashboards seem to be a thing currently in data visualization. So let's try to build one using QGIS.
-
-First thing a dashboard needs is data that is updating on regular basis. In this example we will use ship locations form the [Digitraffic API](https://www.digitraffic.fi/en/marine-traffic/#/restjson--api). 
+Dashboards seem to be a thing currently in data visualization. So let's try to build one using QGIS. First thing a dashboard needs is data that is updating on regular basis. In this example we will use ship locations form the [Digitraffic API](https://www.digitraffic.fi/en/marine-traffic/#/restjson--api). 
 
 QGIS can read an API that returns valid GeoJSON directly from an URL without needing to save it to disk first. You can try that out by opening up the Data Source Manager and pasting this layer in there: 
 https://meri.digitraffic.fi/api/v1/locations/latest
@@ -123,7 +133,7 @@ This should load a GeoJSON layer to your project in a few seconds. In the data w
 - mmsi: ship identification number
 - sog: speed over ground
 - cog: course over ground
-- timestampExternal: an epoxh timestamp
+- timestampExternal: an epoch timestamp
 
 The API also returns some really old features, so you can first filter those out from the screen by adding a filter to the layer with a nice round epoch:
 
@@ -133,9 +143,15 @@ Even better way is to do the filtering already in the query, so try adding the f
 
     https://meri.digitraffic.fi/api/v1/locations/latest?from=1600800000000|layername=OGRGeoJSON
 
+First thing you need to do for a real dashboard look is to set the project background color to black. You can do this 
+
+    2 + ("sog"/20)
+
 To rotate the symbols we can use another attribute from the data. Open the marker dialog from the ship layer and find the rotation definition. Open again the expression dialog from the small black arrow and enter the following expression as the value:
 
      "cog" 
+
+
 
 ![Use your visualization skills to create an informative dashboard](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/dashboard_sample.PNG)
 
@@ -167,6 +183,9 @@ As a last step, to make the data update automatically, we can use PyQGIS to relo
     autoUpdateLayers()
 
 
-This scipt updates a layer based on the name. So first we have to rename the ship layer to ship_autoUpdate. 
+This scipt updates a layer based on the name. So first we have to rename the ship layer to ship_autoUpdate. Leave it running and admire your dashboard. For the ultimate look you should press CTRL + Shift + Tab to enter map only mode.
+
+## Conclusions
+This repository is work in progress. It was first created in September 2020 and the idea is to iterate the contents further in later workshops. PR's and issues (e.g. on content proposals) are welcome!
 
 
