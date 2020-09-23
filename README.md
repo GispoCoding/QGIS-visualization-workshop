@@ -1,13 +1,11 @@
 # QGIS visualization workshop
  2020 QGIS visualization workshop
 
-Author: Topi Tjukanov
+Author: Topi Tjukanov, [Gispo Ltd.](https://www.gispo.fi/en/home/) 
 
-Parts of this blog post are based on [my blog post](https://www.gispo.fi/en/open-software/geogiffery-in-2020-with-qgis-temporal-controller/) about the QGIS Temporal Controller and 
+Parts of this blog post are based on [my blog post](https://www.gispo.fi/en/open-software/geogiffery-in-2020-with-qgis-temporal-controller/) about the QGIS Temporal Controller and visualization methods. 
 
-## Goals
-
-After this workshop participants should be able to:
+The workshop was first held in September 2020 and it aims to cover many different tips and tricks for QGIS visualization in versions 3.14 onwards. After this workshop participants should be able to:
 - Import shared visualization resources (e.g. palettes, styles) to QGIS
 - Have a good understanding of how expressions work in QGIS and how they can be used in data-driven visualizations
 - How to make animated maps using QGIS either with Temporal Controller or PyQGIS
@@ -17,14 +15,15 @@ Workshop is designed to work with QGIS 3.14.15 or newer. You can download latest
 
 Basic knowledge on using QGIS and working with spatial data helps. 
 
-# Workshop examples
+# Workshop 
 ## Introduction to cartography trick & tips in QGIS
 What makes a beautiful map and an informative visualization? The answer is not straightforward and especially trying to cover both aspects on a single map can be very difficult. 
 
-Trying to replicate the look and feel of old maps with modern tools is more difficult than one would imagine. 
+At the other end of the scale with spatial visualizations are the rustic old artistic maps whereas in the other end are the polished and clean dashboards. Trying to replicate the look and feel of old maps with modern tools is much more difficult than the latter. 
+
 ![An example of classic cartography. Source: https://timomeriluoto.kapsi.fi/Sivut/Paasivu/KARTAT/Teemakartat/Teemakartat.html](https://github.com/GispoCoding/QGIS-visualization-workshop/blob/master/images/old_map_example.PNG?raw=true)
 
-So a bit of *noise* in your maps can make them look very different and more personal, 
+Randomness can be inserted to QGIS visualizations easily with expressions which will be covered in this workshop later. So a bit of *noise* in your maps can make them look very different and more personal.
 
 Few general tips for visualizing 
 1.  Don’t add unnecessary elements on your map. Even ditch (or at least simplify) the background map if you can. Don’t forget that you can change your project background color and black is  **always**  cool.
@@ -32,15 +31,13 @@ Few general tips for visualizing
 3.  Use expressions and dynamic styling. We will cover those later. 
 
 ## Importing visualization resources
-Most of the resources QGIS uses for visualization is XML-based or text based. This means that exporting and importing data is relatively easy. 
-
-Add layer from the data folder to your QGIS project. 
+Most of the resources QGIS uses for visualization is XML-based or text based. This means that exporting and importing data is relatively easy. First add layer from the data folder to your QGIS project (e.g. the countries dataset)
 
 I have shared some of my QGIS resources to a [separate repository. ](https://github.com/tjukanovt/qgis_styles)
 
 ![You can import style files directly from an URL to your Style Manager.](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/import_style.PNG)
 
-Try to import a few styles from [Klas Karlsson's awesome collection](http://qgis-hub.fast-page.org/styles.php?i=1) and apply those to your layers. 
+*Try to import a few styles from [Klas Karlsson's awesome collection](http://qgis-hub.fast-page.org/styles.php?i=1) and apply those to your layers.* 
 
 ## Introduction to QGIS expressions
 Expressions in QGIS are "SQL'ish" way to select, filter and process data. It is extremely powerful way not only to do basic data operations but also to use in visualization. 
@@ -187,5 +184,3 @@ This scipt updates a layer based on the name. So first we have to rename the shi
 
 ## Conclusions
 This repository is work in progress. It was first created in September 2020 and the idea is to iterate the contents further in later workshops. PR's and issues (e.g. on content proposals) are welcome!
-
-
