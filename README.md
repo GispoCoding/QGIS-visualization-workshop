@@ -8,7 +8,7 @@ Author: Topi Tjukanov
 After this workshop participants should be able to:
 - Import shared visualization resources (e.g. palettes, styles) to QGIS
 - Have a good understanding of how expressions work in QGIS and how they can be used in data-driven visualizations
-- Use QGIS Temporal Controller and export animations from QGIS
+- How to make animated maps with QGIS either with Temporal Controller or PyQGIS
 
 ## Prerequisites
 Workshop is designed to work with QGIS 3.14.15 or newer. You can download latest QGIS version [here](https://qgis.org/en/site/forusers/download.html). 
@@ -73,12 +73,9 @@ CASE WHEN
 
 Note when writing expressions that fields name should be double-quoted. Values or string should be simple-quoted.
 
-
-### Extending expressions with Python
-
+Expresisons 
 
 ## QGIS Temporal Controller
-
 
 Temporal Controller configuration offers you the following options:
 
@@ -89,3 +86,37 @@ Temporal Controller configuration offers you the following options:
 -   Separate Fields for Start and Event Duration. Like the ones above, this also works on individual features, but event duration should be read from the data. As an example if you are working with the meteorite data, you could build event durations based on the magnitude of the meteorite to build a nice visual effect. So bigger meteorites stay on the map for a longer time.
 -   Start and End Date/Time from Expressions. If your data does not have a valid datetime column you can use this option to make one form existing fields. For instance if you are using the region_buildings dataset in your animation provided to you earlier, you could build a valid timestamp using the expression to_date(“YYYYMMDD”) as the starting date and for example to_date(‘2020-01-01’) as the end date to make the buildings appear cumulatively.
 - Redraw Layer Only. Like the first option, but layer gets redrawn on every frame. The first option and this are probably the biggest changes compared to Time Manager. This basically allows you to redraw layers even without a temporal attribute. You can for example use random values here that change on every frame or parse out seconds from. You can get some crazy ideas by applying the ideas from [this presentation by Nyall Dawson.](http://www.youtube.com/watch?v=v8li0VdrDBI)
+
+## Creating a DASHBOARD with QGIS
+Dashboards seem to be a thing. So let's build one using QGIS.
+
+First thing a dashboard needs is live data.
+
+    "timestampExternal">1600800000000
+
+To make the data update automatically, we can use PyQGIS to reload the source on regular intervals. See this example.
+
+    import threading
+    import datetime
+    import re
+    
+    def autoUpdateLayers():
+      t = threading.Timer(15.0, autoUpdateLayers)
+      t.start()
+      for layer in QgsProject.instance().mapLayers().values():
+        if 'autoUpdate' in layer.name():
+          print('autoUpdating layer: '+layer.name())
+          layer.dataProvider().forceReload()
+          layer.setName(
+            re.sub(
+              'autoUpdate.*',
+              'autoUpdated ' + datetime.datetime.now().strftime('%c'),
+              layer.name()
+            )
+          )
+        if 'cancel' in layer.name():
+          print('stopping execution')
+          t.cancel()
+    
+    
+    autoUpdateLayers()
