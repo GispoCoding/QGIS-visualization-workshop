@@ -33,15 +33,27 @@ I have shared some of my QGIS resources to a [separate repository. ](https://git
 
 ![You can import style files directly from an URL to your Style Manager.](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/import_style.PNG)
 
+Try to import a few styles from [Klas Karlsson's awesome collection](http://qgis-hub.fast-page.org/styles.php?i=1) and apply those to your layers. 
 
 ## Introduction to QGIS expressions
-Expressions in QGIS are "SQL'ish" way to select, filter and process data. 
+Expressions in QGIS are "SQL'ish" way to select, filter and process data. It is extremely powerful way not only to do basic data operations but also to use in visualization. 
+
+Basic expression dialog you will see all around the software looks like this:
 
 ![Expression dialog can be found from QGIS in several places](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/expression_dialog.PNG)
 
 The **Function List** inside expressions contains functions as well as fields and values loaded from your data. In the **Expression** window you see the calculation expressions you create with the **Function List**. For the most commonly used operators, see **Operators**.
 
-An example of a bit longer expression with few QGIS extra flavors can be seen in the Qlimt style and the geometry generator expression. 
+*Browse through the functions list. Do you have an idea what those could be used for? Check out the Aggregate category. Can you think of an use case for those?*
+
+Add a layer from the data folder and open the layer symbolody from properties. Then change the style to **Geometry Generator** and try the following expression to create lines from polygons:
+
+    make_line(point_n( oriented_bbox(  $geometry  ),2), 
+       point_n( oriented_bbox(  $geometry  ),3))
+
+*What kind of results do you get?*   
+
+An example of a bit longer expression with few QGIS extra flavors can be seen in the [Qlimt style](https://gist.github.com/tjukanovt/c0f00116f88fb0a1e102e0485e9aa6dc) and the geometry generator expression. 
 ```
 with_variable('my_geom',
 CASE WHEN 
@@ -73,14 +85,13 @@ CASE WHEN
 
 Note when writing expressions that fields name should be double-quoted. Values or string should be simple-quoted.
 
-Expresisons 
+Try adding the **finland_municipalities.geojson** file from the data folder to your project and create a geometry generator style for it and paste the expression above to the layer. Try editing the style and see how the shapes change. 
 
 ## QGIS Temporal Controller
 
 Temporal Controller configuration offers you the following options:
 
 -   Fixed time range. Here you can manually select when ALL the features of the layer will be drawn on the map. This option doesn’t require the data to have any date or time fields. Could be helpful e.g. with a background layer in your animation.
-    
 -   Single field with Date/Time. This option only requires one attribute and set the event duration manually for all features. See more below.
 -   Separate Fields for Start and End Date/Time. Your data should have two attributes with start and end times. Individual features that interact with the maps temporal extent will be rendered. An example of this type of data could be building vectors which would have building date and demolition date.
 -   Separate Fields for Start and Event Duration. Like the ones above, this also works on individual features, but event duration should be read from the data. As an example if you are working with the meteorite data, you could build event durations based on the magnitude of the meteorite to build a nice visual effect. So bigger meteorites stay on the map for a longer time.
@@ -90,9 +101,36 @@ Temporal Controller configuration offers you the following options:
 ## Creating a DASHBOARD with QGIS
 Dashboards seem to be a thing. So let's build one using QGIS.
 
-First thing a dashboard needs is live data.
+First thing a dashboard needs is data that is updating on regular basis. In this example we will use ship locations form the [Digitraffic API](https://www.digitraffic.fi/en/marine-traffic/#/restjson--api). 
+
+QGIS can read an API that returns valid GeoJSON directly from an URL without needing to save it to disk first. You can try that out by opening up the Data Source Manager and pasting this layer in there: 
+https://meri.digitraffic.fi/api/v1/locations/latest
+
+![You can insert a GeoJSON directy from an URL](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/insert_geojson.PNG)
+
+This should load a GeoJSON layer to your project in a few seconds. In the data you can see the following attributes:
+- mmsi
+- sog
+- cog
+- navStat
+- rot
+- posAcc
+- raim
+- heading
+- timestamp
+- timestampExternal
+
+The API also returns some really old features, so you can first filter those out from the screen by adding a filter to the layer with a nice round epoch:
 
     "timestampExternal">1600800000000
+
+Even better way is to do the filtering already in the query, so try adding the following layer to your project:
+
+    https://meri.digitraffic.fi/api/v1/locations/latest?from=1600800000000|layername=OGRGeoJSON
+
+To rotate the symbols we can use another attribute from the data. Open the marker dialog from the ship layer and find the rotation definition. Open again the expression dialog from the small black arrow and enter the following expression as the value:
+
+     "cog" 
 
 To make the data update automatically, we can use PyQGIS to reload the source on regular intervals. See this example.
 
@@ -120,3 +158,8 @@ To make the data update automatically, we can use PyQGIS to reload the source on
     
     
     autoUpdateLayers()
+
+
+This scipt updates a layer based on the name. So first we have to rename the ship layer to ship_autoUpdate. 
+
+
