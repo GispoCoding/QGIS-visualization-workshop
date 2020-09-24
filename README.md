@@ -152,35 +152,9 @@ To rotate the symbols we can use another attribute from the data. Open the marke
 
 ![Use your visualization skills to create an informative dashboard](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/dashboard_sample.PNG)
 
-As a last step, to make the data update automatically, we can use PyQGIS to reload the source on regular intervals. See the example below ([Big thanks to Keith Jenkins!](https://twitter.com/kgjenkins/status/1308495702843154440?s=20)):
+As a last step, to make the data update automatically, we can use PyQGIS to reload the source on regular intervals. Get the autoupdate_ships.py from the scripts forlder ([Big thanks to Keith Jenkins!](https://twitter.com/kgjenkins/status/1308495702843154440?s=20)) and open it up in the Python console (Ctrl + Alt+ P).
 
-    import threading
-    import datetime
-    import re
-    
-    def autoUpdateLayers():
-      t = threading.Timer(15.0, autoUpdateLayers)
-      t.start()
-      for layer in QgsProject.instance().mapLayers().values():
-        if 'autoUpdate' in layer.name():
-          print('autoUpdating layer: '+layer.name())
-          layer.dataProvider().forceReload()
-          layer.setName(
-            re.sub(
-              'autoUpdate.*',
-              'autoUpdated ' + datetime.datetime.now().strftime('%c'),
-              layer.name()
-            )
-          )
-        if 'cancel' in layer.name():
-          print('stopping execution')
-          t.cancel()
-    
-    
-    autoUpdateLayers()
-
-
-This scipt updates a layer based on the name. So first we have to rename the ship layer to ship_autoUpdate. Leave it running and admire your dashboard. For the ultimate look you should press CTRL + Shift + Tab to enter map only mode.
+This scipt updates a layer based on the name. So first we have to rename the ship layer to ship_autoUpdate. Leave it running and admire your dashboard. For the ultimate look you should press Ctrl+ Shift + Tab to enter map only mode.
 
 ## Conclusions
 This repository is work in progress. It was first created in September 2020 and the idea is to iterate the contents further in later workshops. PR's and issues (e.g. on content proposals) are welcome!
