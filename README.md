@@ -3,12 +3,14 @@
 
 Author: Topi Tjukanov, [Gispo Ltd.](https://www.gispo.fi/en/home/) 
 
-Parts of this blog post are based on [my blog post](https://www.gispo.fi/en/open-software/geogiffery-in-2020-with-qgis-temporal-controller/) about the QGIS Temporal Controller and visualization methods. 
+Parts of this workshop are based on [my blog post](https://www.gispo.fi/en/open-software/geogiffery-in-2020-with-qgis-temporal-controller/) about the QGIS Temporal Controller and visualization methods. 
 
-The workshop was first held in September 2020 and it aims to cover many different tips and tricks for QGIS visualization in versions 3.14 onwards. After this workshop participants should be able to:
+The workshop was first held in September 2020 and it aims to cover many different tips and tricks for QGIS visualization. After this workshop participants should be able to:
 - Import shared visualization resources (e.g. palettes, styles) to QGIS
 - Have a good understanding of how expressions work in QGIS and how they can be used in data-driven visualizations
 - How to make animated maps using QGIS either with Temporal Controller or PyQGIS
+
+This repository contains the main building blocks of the workshop, but is not intended to be 100% self-study. 
 
 ## Prerequisites
 Workshop is designed to work with QGIS 3.14.15 or newer. You can download latest QGIS version [here](https://qgis.org/en/site/forusers/download.html). 
@@ -16,30 +18,18 @@ Workshop is designed to work with QGIS 3.14.15 or newer. You can download latest
 Basic knowledge on using QGIS and working with spatial data helps. 
 
 # Workshop 
-## Introduction to cartography trick & tips in QGIS
-What makes a beautiful map and an informative visualization? The answer is not straightforward and especially trying to cover both aspects on a single map can be very difficult. 
+## QGIS cartography tricks with expressions
+What makes a beautiful map and an informative visualization? The answer is not straightforward and especially trying to cover both aspects on a single map can be very difficult. Few general tips for making impactful visualizations:
+1.  Don’t add unnecessary elements on your map. Even ditch (or at least simplify) the background map if you can. Don’t forget that you can change your project background color and black is  **always**  cool.
+2.  Experiment with colors and blending modes. Just like with any static map, these really give that extra touch to your outputs. Choosing the right colors is a key factor in making stunning cartography. An excellent resource to help you with that is [this blog post](https://blog.datawrapper.de/beautifulcolors/) by Datawrapper. 
+3.  Use expressions and dynamic styling. We will cover those later. 
 
-At the other end of the scale with spatial visualizations are the rustic old artistic maps whereas in the other end are the polished and clean dashboards. Trying to replicate the look and feel of old maps with modern tools is much more difficult than the latter. 
+At the other end of the scale with spatial visualizations are the rustic old artistic maps whereas in the other end are the polished and clean dashboards. Trying to replicate the look and feel of old maps with modern tools is much more difficult than the latter. If we look at an example ([source](https://timomeriluoto.kapsi.fi/Sivut/Paasivu/KARTAT/Teemakartat/Teemakartat.html)), we can pinpoint few things which make the map pleasing to the eye: the somewhat random locations of the symbols, a simple color palette and few different fonts which work well together. 
 
 ![An example of classic cartography. Source: https://timomeriluoto.kapsi.fi/Sivut/Paasivu/KARTAT/Teemakartat/Teemakartat.html](https://github.com/GispoCoding/QGIS-visualization-workshop/blob/master/images/old_map_example.PNG?raw=true)
 
-Randomness can be inserted to QGIS visualizations easily with expressions which will be covered in this workshop later. So a bit of *noise* in your maps can make them look very different and more personal.
+Randomness can be inserted to QGIS visualizations easily with expressions which will be covered in this workshop later, but also through a few ready made tools. One thing to try out is the random  So a bit of *noise* in your maps can make them look very different and more personal.
 
-Few general tips for visualizing 
-1.  Don’t add unnecessary elements on your map. Even ditch (or at least simplify) the background map if you can. Don’t forget that you can change your project background color and black is  **always**  cool.
-2.  Experiment with colors and blending modes. Just like with any static map, these really give that extra touch to your outputs.Choosing the right colors is a key factor in making stunning cartography. An excellent resource to help you with that is [this blog post](https://blog.datawrapper.de/beautifulcolors/) by Datawrapper. 
-3.  Use expressions and dynamic styling. We will cover those later. 
-
-## Importing visualization resources
-Most of the resources QGIS uses for visualization is XML-based or text based. This means that exporting and importing data is relatively easy. First add layer from the data folder to your QGIS project (e.g. the countries dataset)
-
-I have shared some of my QGIS resources to a [separate repository. ](https://github.com/tjukanovt/qgis_styles)
-
-![You can import style files directly from an URL to your Style Manager.](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/import_style.PNG)
-
-*Try to import a few styles from [Klas Karlsson's awesome collection](http://qgis-hub.fast-page.org/styles.php?i=1) and apply those to your layers.* 
-
-## Introduction to QGIS expressions
 Expressions in QGIS are "SQL'ish" way to select, filter and process data. It is extremely powerful way not only to do basic data operations but also to use in visualization. 
 
 Basic expression dialog you will see all around the software looks like this:
@@ -89,15 +79,21 @@ CASE WHEN
 
 Note when writing expressions that fields name should be double-quoted. Values or string should be simple-quoted.
 
-Try adding the **finland_municipalities.geojson** file from the data folder to your project and create a geometry generator style for it and paste the expression above to the layer. Try editing the style and see how the shapes change. 
+*Try adding the **finland_municipalities.geojson** file from the data folder to your project and create a geometry generator style for it and paste the expression above to the layer. Try editing the style and see how the shapes change.* 
+
+## Importing visualization resources
+Most of the resources QGIS uses for visualization is XML-based or text based. This means that exporting and importing data is relatively easy. First add layer from the data folder to your QGIS project (e.g. the countries dataset)
+
+I have shared some of my QGIS resources to a [separate repository. ](https://github.com/tjukanovt/qgis_styles)
+
+![You can import style files directly from an URL to your Style Manager.](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/import_style.PNG)
+
+*Try to import a few styles from [Klas Karlsson's awesome collection](http://qgis-hub.fast-page.org/styles.php?i=1) and apply those to your layers.* 
 
 ## QGIS Temporal Controller
-From the version 3.14 onwards QGIS has had a functionality to visualize temporal data better called Temporal Controller. 
+From the version 3.14 onwards QGIS has had a functionality to visualize temporal data better called Temporal Controller. Previously this has been possible with the Time Manager plugin. 
 
 You need to acquire a vector dataset with some information about time and preferably in a valid way. In QGIS the basic valid datetime format is  _YYYY-MM-DD hh:mm:ss,_ but the Temporal Controller can work also only with date information (e.g. .  _YYYY-MM-DD)._ Read more about different types to represent date and time from my  [old blog post](https://medium.com/@tjukanov/geogiffery-in-a-nutshell-introduction-to-qgis-time-manager-31bb79f2af19).
-
-The data folder contains a shapefile with all the buildings in the Helsinki region called region_buildings.shp. 
-
 Temporal Controller configuration offers you the following options:
 
 -   Fixed time range. Here you can manually select when ALL the features of the layer will be drawn on the map. This option doesn’t require the data to have any date or time fields. Could be helpful e.g. with a background layer in your animation.
@@ -107,19 +103,20 @@ Temporal Controller configuration offers you the following options:
 -   Start and End Date/Time from Expressions. If your data does not have a valid datetime column you can use this option to make one form existing fields. 
 - Redraw Layer Only. Like the first option, but layer gets redrawn on every frame. The first option and this are probably the biggest changes compared to the Time Manager plugin. This basically allows you to redraw layers even without a temporal attribute. You can for example use random values here that change on every frame or parse out seconds from. You can get some crazy ideas by applying the ideas from [this presentation by Nyall Dawson.](http://www.youtube.com/watch?v=v8li0VdrDBI)
 
+The data folder contains a shapefile with all the buildings in the Helsinki region called **region_buildings.shp.** . Add this to your project and open up the layer properties and find the Temporal tab. 
 
 ![Adding temporal data to your project and turning on the tempral capabilities](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/add_temporal_data.PNG)
 
-After this you need to activate the Temroral Controller panel in your project (the clock icon) and turn on the animated view (the freen button). The animated view allows you to browse back and forth with the building data and see how the region has developed. 
+After this you need to activate the Temporal Controller panel in your project (the clock icon) and turn on the animated view (the green button). The animated view allows you to browse back and forth with the building data and see how the region has developed. 
 
 ![Helsinki city center in 1912 with the temporal view](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/temporal_view.PNG)
 
 If there was also a dataset with demolished buildings this could be even more informative and interesting. This could be exported in to an animated gif or a video. If you want to add some basemaps to your QGIS, check out [this script.](https://raw.githubusercontent.com/klakar/QGIS_resources/master/collections/Geosupportsystem/python/qgis_basemaps.py) 
 
-*Try to visualize the buildings in an informative way. What kind of information is important when building this type of animaton?*
+*Try to visualize the buildings in an informative way. What kind of information is important when building this type of animation?*
 
 ## Creating a dashboard with QGIS
-Dashboards seem to be a thing currently in data visualization. So let's try to build one using QGIS. First thing a dashboard needs is data that is updating on regular basis. In this example we will use ship locations form the [Digitraffic API](https://www.digitraffic.fi/en/marine-traffic/#/restjson--api). 
+Dashboards [seem to be a thing](https://twitter.com/tjukanov/status/1242869466796625922?s=20) currently in data visualization. So let's jump on the bandwagon and try to build one using QGIS. First thing a dashboard needs is data that is updating on regular basis. In this example we will use ship locations form the [Digitraffic API](https://www.digitraffic.fi/en/marine-traffic/#/restjson--api). 
 
 QGIS can read an API that returns valid GeoJSON directly from an URL without needing to save it to disk first. You can try that out by opening up the Data Source Manager and pasting this layer in there: 
 https://meri.digitraffic.fi/api/v1/locations/latest
@@ -127,10 +124,10 @@ https://meri.digitraffic.fi/api/v1/locations/latest
 ![You can insert a GeoJSON directy from an URL](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/insert_geojson.PNG)
 
 This should load a GeoJSON layer to your project in a few seconds. In the data we are interested in the following attributes:
-- mmsi: ship identification number
-- sog: speed over ground
-- cog: course over ground
-- timestampExternal: an epoch timestamp
+- *mmsi*: ship identification number
+- *sog*: speed over ground
+- *cog*: course over ground
+- *timestampExternal*: an epoch timestamp
 
 The API also returns some really old features, so you can first filter those out from the screen by adding a filter to the layer with a nice round epoch:
 
@@ -140,15 +137,18 @@ Even better way is to do the filtering already in the query, so try adding the f
 
     https://meri.digitraffic.fi/api/v1/locations/latest?from=1600800000000|layername=OGRGeoJSON
 
-First thing you need to do for a real dashboard look is to set the project background color to black. You can do this 
+First thing you need to do for a real dashboard look is to set the project background color to **black**. You can do this from project properties. Next up we need to start working with expressions and use them in styling. Open up the symbol size expression dialog here:
+![This is where the magic happens](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/insert_expressions.png)
+
+To make the ships scaled by their speed value, insert the following expression to the dialog:
 
     2 + ("sog"/20)
 
-To rotate the symbols we can use another attribute from the data. Open the marker dialog from the ship layer and find the rotation definition. Open again the expression dialog from the small black arrow and enter the following expression as the value:
+To rotate the symbols we can use another attribute from the data.  Open again the expression dialog from the small black arrow and enter the following expression as the value:
 
      "cog" 
 
-
+Use your styling skills to make it look like a dashboard. Change the project CRS if necessary and add background information if necessary.
 
 ![Use your visualization skills to create an informative dashboard](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/dashboard_sample.PNG)
 
