@@ -1,3 +1,4 @@
+
 # QGIS visualization workshop
  2020 QGIS visualization workshop
 
@@ -5,12 +6,12 @@ Author: Topi Tjukanov, [Gispo Ltd.](https://www.gispo.fi/en/home/)
 
 Parts of this workshop are based on [my blog post](https://www.gispo.fi/en/open-software/geogiffery-in-2020-with-qgis-temporal-controller/) about the QGIS Temporal Controller and visualization methods. 
 
-The workshop was first held in September 2020 and it aims to cover many different tips and tricks for QGIS visualization. After this workshop participants should be able to:
+The workshop was first held in September 2020 and further developer for  [ISSonVis 2021](http://www.geoinformatics.upol.cz/en/iss). It aims to cover many different tips and tricks for QGIS visualization. After this workshop participants should be able to:
 - Import shared visualization resources (e.g. palettes, styles) to QGIS
 - Have a good understanding of how expressions work in QGIS and how they can be used in data-driven visualizations
 - How to make animated maps using QGIS either with Temporal Controller or PyQGIS
 
-This repository contains the main building blocks of the workshop, but is not intended to be 100% self-study. 
+This repository contains the main building blocks of a visualization workshop workshop, but is not intended to be 100% self-study. 
 
 ## Prerequisites
 Workshop is designed to work with QGIS 3.14.15 or newer. You can download latest QGIS version [here](https://qgis.org/en/site/forusers/download.html). 
@@ -88,10 +89,12 @@ I have shared some of my QGIS resources to a [separate repository. ](https://git
 
 ![You can import style files directly from an URL to your Style Manager.](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/import_style.PNG)
 
-*Try to import a few styles from [Klas Karlsson's awesome collection](http://qgis-hub.fast-page.org/styles.php?i=1) and apply those to your layers.* 
+QGIS community has also released a centralized [QGIS style collection](https://plugins.qgis.org/styles/). Via the style hub you can search and use some of the awesome styles published there. 
+
+*Try to import a few styles from [the QGIS style collection](https://plugins.qgis.org/styles/?order_by=-download_count&&q=&&) and apply those to your layers.* 
 
 ## QGIS Temporal Controller
-From the version 3.14 onwards QGIS has had a functionality to visualize temporal data better called Temporal Controller. Previously this has been possible with the Time Manager plugin. 
+From version 3.14 onwards QGIS has had a functionality to visualize temporal data better called Temporal Controller. Previously this has been possible with the [Time Manager plugin](https://anitagraser.com/projects/time-manager/). 
 
 You need to acquire a vector dataset with some information about time and preferably in a valid way. In QGIS the basic valid datetime format is  _YYYY-MM-DD hh:mm:ss,_ but the Temporal Controller can work also only with date information (e.g. .  _YYYY-MM-DD)._ Read more about different types to represent date and time from my  [old blog post](https://medium.com/@tjukanov/geogiffery-in-a-nutshell-introduction-to-qgis-time-manager-31bb79f2af19).
 Temporal Controller configuration offers you the following options:
@@ -131,11 +134,11 @@ This should load a GeoJSON layer to your project in a few seconds. In the data w
 
 The API also returns some really old features, so you can first filter those out from the screen by adding a filter to the layer with a nice round epoch:
 
-    "timestampExternal">1600800000000
+    "timestampExternal">1615000000000
 
 Even better way is to do the filtering already in the query, so try adding the following layer to your project:
 
-    https://meri.digitraffic.fi/api/v1/locations/latest?from=1600800000000|layername=OGRGeoJSON
+    https://meri.digitraffic.fi/api/v1/locations/latest?from=1615000000000|layername=OGRGeoJSON
 
 First thing you need to do for a real dashboard look is to set the project background color to **black**. You can do this from project properties. Next up we need to start working with expressions and use them in styling. Open up the symbol size expression dialog here:
 ![This is where the magic happens](https://raw.githubusercontent.com/GispoCoding/QGIS-visualization-workshop/master/images/insert_expressions.png)
