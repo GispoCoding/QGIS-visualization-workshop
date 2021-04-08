@@ -1,6 +1,6 @@
 
 # QGIS visualization workshop
- 2020 QGIS visualization workshop
+ 2021 QGIS visualization workshop
 
 Author: Topi Tjukanov, [Gispo Ltd.](https://www.gispo.fi/en/home/) 
 
